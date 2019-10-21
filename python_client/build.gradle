@@ -1,0 +1,31 @@
+apply from: '../project.gradle'
+
+description = ''
+ext.moduleName = 'swim.basic'
+mainClassName = 'swim.basic.BasicPlane'
+
+dependencies {
+    api group: 'org.swimos', name: 'swim-api', version: version
+    api group: 'org.swimos', name: 'swim-server', version: version
+    api group: 'org.swimos', name: 'swim-client', version: version
+}
+
+task createVenv(type: Exec) {
+    workingDir 'src/main/python'
+    commandLine 'python3', '-m', 'venv', 'venv'
+}
+
+task getDependencies(dependsOn: createVenv, type: Exec) {
+    workingDir 'src/main/python'
+    commandLine 'venv/bin/pip3', 'install', 'swimai'
+}
+
+task runClient(dependsOn: getDependencies, type: Exec) {
+    group = "application"
+    
+    workingDir 'src/main/python'
+    commandLine 'venv/bin/python3', 'client.py'
+}
+
+
+
